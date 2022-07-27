@@ -34,9 +34,12 @@ The file groups.py contain some of the more common group such that only typing t
 You need to add it. Here is how:
 
 You need to know how your group permute your sites. 
-For example, the group c2 for 3 sites is symmetric under reflection of site 0 and site 1 along the axis of site 2. Hence, the initial configuration [0,1,2] after c2 reflexion is now [1,0,2]. The latter list is the symmetry generator that you have to add to the function group_create in groups.py as sym_gen. 
-Here, sym_gen is a list of lists because we can combine multiple symmetry generators to make more complicate groups. For exemple, we can create the non-abelian group c2v by combining the c2 symmetry generator [1,0,2] with c3 symmetry generator [2,0,1]:
+For example, the group c2 for 3 sites is symmetric under reflection of site 0 and site 1 along the axis of site 2. 
 
+Hence, the initial configuration [0,1,2] after c2 reflexion is now [1,0,2]. The latter list is the symmetry generator that you have to add to the function group_create in groups.py as sym_gen. 
+
+Here, sym_gen is a list of lists because we can combine multiple symmetry generators to make more complicate groups. For exemple, we can create the non-abelian group c2v by combining the c2 symmetry generator [1,0,2] with c3 symmetry generator [2,0,1]:
+```
 def group_create(Nsites,group):
        if Nsites == 3 and group == "c2v":
            sym_gen = [[1,0,2],[2,0,1]]
@@ -44,6 +47,7 @@ def group_create(Nsites,group):
                          [1,1,-1,-1,-1,-1],
                          [1,-1,1,1,-1,-1],
                          [1,-1,-1,-1,1,1]]
+```
 As you see, you also need to give the character table of the group.
 
 
@@ -51,10 +55,11 @@ As you see, you also need to give the character table of the group.
 ## Interraction matrix
 The program suppose that all the sites are interracting with each other. However, if this is not the case, you can write an interraction matrix.
 For a 4 sites square system where there is no interraction between diagonals the interraction matrix would be as follow:
+```
 interaction_matrix = [[0,1,0,1],   (the zeroth sites does not interract with itself and with the second sites hence the 0 in the first row of matrix)
                       [1,0,1,0],   (Same pattern in other rows)
                       [0,1,0,1],
                       [1,0,1,0]]
-
+```
 ## Project status
 Work in progress. Some changes as to be made to better suit non-abelian groups. 
