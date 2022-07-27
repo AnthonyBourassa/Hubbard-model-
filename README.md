@@ -6,7 +6,7 @@ This project compute the energy eigenvalue of the simple Hubbard Hamiltonian by 
 * [General info](#general-info)
 * [Technologies](#technologies)
 * [How to use](#how_to_use)
-* [What if the group I want to use is not in groups.py ?](#What_if_the_group_I_want_to_use_is_not_in_groups.py_?)
+* [What if the group I want  is not in groups.py ?](#What_if_the_group_I_want_is_not_in_groups.py_?)
 * [Interraction matrix](#Interraction_matrix)
 * [Inspiration](#Inspiration)
 * [Project status](#project_status)
