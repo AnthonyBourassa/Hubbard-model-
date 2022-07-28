@@ -53,7 +53,7 @@ def group_create(Nsites,group):
 As you see, you also need to give the character table of the group. Ultimately, it would be cool if the program could generate the character table only from the symmetry generator, but for now we have to write it ourself. Also, it is important that the characters fit the group element order. 
 
 ##Example of use
-
+So I want to know the eigenvalues of the 3 sites Hubbard Hamiltonian... 
 ## Interraction matrix
 The program suppose that all the sites are interracting with each other. However, if this is not the case, you can write an interraction matrix.
 For a 4 sites square system where there is no interraction between diagonals the interraction matrix would be as follow:
