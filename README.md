@@ -8,6 +8,7 @@ This project compute the energy eigenvalue of the simple Hubbard Hamiltonian by 
 * [How to use](#how_to_use)
 * [What if the group I want  is not in groups.py ?](#What_if_the_group_I_want_is_not_in_groups.py_?)
 * [Interraction matrix](#Interraction_matrix)
+* [Example of use](#Example_of_use)
 * [Inspiration](#Inspiration)
 * [Project status](#project_status)
 ## General info
@@ -26,9 +27,10 @@ In the command line, it look like this:
 python3 hubbard_diag_v5.py number of sites symmetry group
 
 Example, if I wanted the eigenvalue for the two sites Hamiltonian under the C2 symmetry group, it would look like this:
-python3 hubbard_diag_v5.py 2 "c2"
-
-The file groups.py contain some of the more common group such that only typing the name as a string of the group under Schonflies convention is enough. 
+```
+$ python3 hubbard_diag_v5.py 2 "c2"
+```
+The file groups.py contain some of the more common groups such that only typing the name as a string of the group under Schonflies convention is enough. 
 
 ## What if the group I want to use is not in groups.py ?
 You need to add it. Here is how:
@@ -38,19 +40,19 @@ For example, the group c2 for 3 sites is symmetric under reflection of site 0 an
 
 Hence, the initial configuration [0,1,2] after c2 reflexion is now [1,0,2]. The latter list is the symmetry generator that you have to add to the function group_create in groups.py as sym_gen. 
 
-Here, sym_gen is a list of lists because we can combine multiple symmetry generators to make more complicate groups. For exemple, we can create the non-abelian group c2v by combining the c2 symmetry generator [1,0,2] with c3 symmetry generator [2,0,1]:
+Here, sym_gen is a list of lists because we can combine multiple symmetry generators to make more complicate groups. For exemple, we can create the non-abelian group d3 by combining the c2 symmetry generator [1,0,2] with c3 symmetry generator [2,0,1]:
 ```
 def group_create(Nsites,group):
-       if Nsites == 3 and group == "c2v":
+       if Nsites == 3 and group == "d3":
            sym_gen = [[1,0,2],[2,0,1]]
            char_table = [[1,1,1,1,1,1],
-                         [1,1,-1,-1,-1,-1],
-                         [1,-1,1,1,-1,-1],
-                         [1,-1,-1,-1,1,1]]
+                         [1,-1,1,-1,1,-1],
+                         [2,0,-1,0,-1,0]]
+
 ```
-As you see, you also need to give the character table of the group.
+As you see, you also need to give the character table of the group. Ultimately, it would be cool if the program could generate the character table only from the symmetry generator, but for now we have to write it ourself. Also, it is important that the characters fit the group element order. 
 
-
+##Example of use
 
 ## Interraction matrix
 The program suppose that all the sites are interracting with each other. However, if this is not the case, you can write an interraction matrix.
