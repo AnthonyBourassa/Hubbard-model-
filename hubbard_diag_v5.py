@@ -69,24 +69,23 @@ def main():
 
  # print(hamiltonian())
 
-  print(orbit_printer())
+  orbits = orbit_printer()
+  print(orbits)
 
-
-
-  print(electron_number(orbit_printer()))
-  print("      ",total_spin(orbit_printer()))
-
+  print(electron_number(orbits))
+  print("      ", total_spin(orbits))
 
   print("matrices en bloc:")
-  for i in range(len(orbit_printer())):
-      print(block_matrix(orbit_printer()[i]))
-      print(np.linalg.eigh(block_matrix(orbit_printer()[i])))
-      
+  for orbit in orbits:
+      block = block_matrix(orbit)
+      print(block)
+      print(np.linalg.eigh(block))
 
   print("matrice symetriques:")
-  for i in range(len(orbit_printer())):
-      print(symmetric_block(orbit_printer()[i]))
-      print(np.linalg.eigh(symmetric_block(orbit_printer()[i])))
+  for orbit in orbits:
+      sblock = symmetric_block(orbit)
+      print(sblock)
+      print(np.linalg.eigh(sblock))
 
 def generator(list1):
     list2 = []
