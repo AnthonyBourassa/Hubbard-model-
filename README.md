@@ -33,12 +33,17 @@ $ python3 hubbard_diag_v5.py 2 "c2"
 The file groups.py contain some of the more common groups such that only typing the name as a string of the group under Schonflies convention is enough. 
 
 ## The group I want is not in groups.py ?
-You need to add it. Here is how:
+If you request a combination of sites and group that is not supported,
+``group_create`` will now raise a ``ValueError``.  To add support for a new
+group you need to extend ``groups.py``.  Here is how:
 
-You need to know how your group permute your sites. 
+You need to know how your group permutes your sites.
 
-For example, the group c2 for 3 sites is symmetric under reflection of site 0 and site 1 along the axis of site 2. 
-Hence, the initial configuration [0,1,2] after c2 reflexion is now [1,0,2]. The latter list is the symmetry generator that you have to add to the function group_create in groups.py as sym_gen. 
+For example, the group c2 for 3 sites is symmetric under reflection of site 0
+and site 1 along the axis of site 2. Hence, the initial configuration [0,1,2]
+after c2 reflexion is now [1,0,2]. The latter list is the symmetry generator
+that you have to add to the function ``group_create`` in ``groups.py`` as
+``sym_gen``.
 
 Here, sym_gen is a list of lists because we can combine multiple symmetry generators to make more complicate groups. For exemple, we can create the non-abelian group d3 by combining the c2 symmetry generator [1,0,2] with c3 symmetry generator [2,0,1]:
 ```
@@ -50,7 +55,10 @@ def group_create(Nsites,group):
                          [2,0,-1,0,-1,0]]
 
 ```
-As you see, you also need to give the character table of the group. Ultimately, it would be cool if the program could generate the character table only from the symmetry generator, but for now we have to write it ourself. Also, it is important that the characters fit the group element order. 
+As you see, you also need to give the character table of the group.  In the
+future we hope to generate these tables automatically from the generators, but
+for now they must be specified explicitly.  Also, it is important that the
+characters fit the group element order.
 
 ## Example of use
 So I want to know the eigenvalues of the 3 sites Hubbard Hamiltonian... 
