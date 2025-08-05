@@ -8,23 +8,37 @@ import groups
 Nsites = int(sys.argv[1])
 Nflavor = 2*Nsites
 group = str(sys.argv[2])
-T = -1 
+T = -1
 
 U = 5
 
 
-if Nsites == 2:
-    interaction_matrix = [[0,1],
-                          [1,0]]
-elif  Nsites == 3:
-    interaction_matrix = [[0,1,1],
-                          [1,0,1],
-                          [1,1,0]]
-elif Nsites == 4:
-    interaction_matrix = [[0,1,0,1],
-                          [1,0,1,0],
-                          [0,1,0,1],
-                          [1,0,1,0]]
+def build_interaction_matrix(nsites):
+    """Generate the interaction matrix for a ring lattice.
+
+    Each site interacts only with its nearest neighbours using periodic
+    boundary conditions. The resulting matrix is symmetric with ``1`` for
+    nearest-neighbour interactions and ``0`` otherwise.
+
+    Parameters
+    ----------
+    nsites : int
+        Number of lattice sites.
+
+    Returns
+    -------
+    list[list[int]]
+        ``nsites`` x ``nsites`` interaction matrix.
+    """
+
+    matrix = [[0] * nsites for _ in range(nsites)]
+    for i in range(nsites):
+        matrix[i][(i - 1) % nsites] = 1
+        matrix[i][(i + 1) % nsites] = 1
+    return matrix
+
+
+interaction_matrix = build_interaction_matrix(Nsites)
 
 
 
