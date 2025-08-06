@@ -83,7 +83,7 @@ def main():
 
   print("matrice symetriques:")
   for orbit in orbits:
-      sblock = symmetric_block(orbit)
+      sblock = symmetric_block(orbit, gens)
       print(sblock)
       print(np.linalg.eigh(sblock))
 
@@ -131,6 +131,9 @@ def generator(list1):
     return list6
 
 
+gens = generator(symmetry_generator)
+
+
 
 
 
@@ -160,25 +163,25 @@ def group_action(state,symmetry):
 #For Nsites = 2, and group C2
 #Input:(5,1)
 #Output:1/2,[10],[5,-10]
-def symmetric_state(state,representation):
-    coefficient = 1/len(generator(symmetry_generator))
+def symmetric_state(state, representation, gens):
+    coefficient = 1/len(gens)
     list1 = []
     list2 = []
     list3 = []
-    for i in range(len(generator(symmetry_generator))):
+    for i in range(len(gens)):
         for j in range(len(character_table[i])):
-            list1.append((character_table[i][j])*group_action(state,generator(symmetry_generator)[j]))
-            if j == len(character_table[i])-1:
+            list1.append((character_table[i][j]) * group_action(state, gens[j]))
+            if j == len(character_table[i]) - 1:
                 test = list1.copy()
                 list3.append(test)
                 list1 *= 0
-           
-    for i in range(1):
-        for j in range(1,len(character_table[i])):
-            list2.append((character_table[i][j])*group_action(state,generator(symmetry_generator)[j]))
 
-            
-    return coefficient,list2,list3[representation]
+    for i in range(1):
+        for j in range(1, len(character_table[i])):
+            list2.append((character_table[i][j]) * group_action(state, gens[j]))
+
+
+    return coefficient, list2, list3[representation]
 
 
 
@@ -193,29 +196,25 @@ def symmetric_state(state,representation):
 #The first two inputs are the states, third one is the representation of the first state, and the last one the representation of the second state
 #Input:(5,6,0,0)
 #Output:2T
-def product(state1,state2,rep1,rep2):
+def product(state1, state2, rep1, rep2, gens):
     sum = 0
-    for i in range(len(symmetric_state(state1,rep1)[2])):
-        for j in range(len( symmetric_state(state2,rep2)[2])):
-            if abs(symmetric_state(state2,rep2)[2][j]) in hopping(abs(symmetric_state(state1,rep1)[2][i])):
-                if (symmetric_state(state1,rep1)[2][i] < 0 and not symmetric_state(state2,rep2)[2][j] < 0)  or (symmetric_state(state2,rep2)[2][j] < 0 and not symmetric_state(state1,rep1)[2][i] < 0)  :
+    ss1_coeff, _, ss1 = symmetric_state(state1, rep1, gens)
+    ss2_coeff, _, ss2 = symmetric_state(state2, rep2, gens)
+    for i in range(len(ss1)):
+        for j in range(len(ss2)):
+            if abs(ss2[j]) in hopping(abs(ss1[i])):
+                if (ss1[i] < 0 and not ss2[j] < 0) or (ss2[j] < 0 and not ss1[i] < 0):
                     sum -= 1*T
                 else:
                     sum += 1*T
-
-            elif abs(symmetric_state(state2,rep2)[2][j])  == abs(symmetric_state(state1,rep1)[2][i]):
-                if (symmetric_state(state1,rep1)[2][i] < 0 and not symmetric_state(state2,rep2)[2][j] < 0)  or (symmetric_state(state2,rep2)[2][j] < 0 and not symmetric_state(state1,rep1)[2][i] < 0)  :  
-                    sum -= count(abs(symmetric_state(state2,rep2)[2][j]))
+            elif abs(ss2[j]) == abs(ss1[i]):
+                if (ss1[i] < 0 and not ss2[j] < 0) or (ss2[j] < 0 and not ss1[i] < 0):
+                    sum -= count(abs(ss2[j]))
                 else:
-                    sum += count(abs(symmetric_state(state2,rep2)[2][j]))
-                
-            
-            
-                
-                
+                    sum += count(abs(ss2[j]))
     if rep1 != rep2:
-        sum = 0 
-    return sum*symmetric_state(state1,rep1)[0]
+        sum = 0
+    return sum * ss1_coeff
 
 def occupied(state,flavor):
   return (state|(2**flavor)) == state
@@ -417,13 +416,13 @@ def block_matrix(list):
 
 #Output each block matrix but in the symmetric basis.
 #These matrix are have diagonal block correponding to the group irreducable reresentations
-def symmetric_block(list):
+def symmetric_block(list, gens):
     sum1 = 0
     sum2 = 0
     list2 = []
     for i in range(len(list)):
         if list[i] not in list2:
-            if all(j not in list2 for j in symmetric_state(list[i],0)[1]) :
+            if all(j not in list2 for j in symmetric_state(list[i], 0, gens)[1]) :
                 list2.append(list[i])
     if len(list)==1:
         list3 = list2
@@ -434,8 +433,8 @@ def symmetric_block(list):
         for j in range(len(list3)):
             sum1 = i//len(list2)
             sum2 = j//len(list2)
-           
-            a[i][j] = product(list3[i],list3[j],sum1,sum2)
+
+            a[i][j] = product(list3[i], list3[j], sum1, sum2, gens)
     idx = np.argwhere(np.all(a[..., :] == 0, axis=0))
     a2 = np.delete(a, idx, axis=1)
     a3 =a2[~np.all(a2 == 0, axis=1)]
@@ -444,21 +443,21 @@ def symmetric_block(list):
 
 
 #Print the block of a symmetric matrix correponding to an irreducable representation
-def irreducable_representation(list,rep):
+def irreducable_representation(list, rep, gens):
     sum1 = 0
     sum2 = 0
     list2 = []
     for i in range(len(list)):
         if list[i] not in list2:
-            if all(j not in list2 for j in symmetric_state(list[i],0)[1]) :
+            if all(j not in list2 for j in symmetric_state(list[i], 0, gens)[1]) :
                 list2.append(list[i])
 
     a = np.zeros((len(list2),len(list2)))
     for i in range(len(list2)):
         for j in range(len(list2)):
-            
-           
-            a[i][j] = product(list2[i],list2[j],rep,rep)
+
+
+            a[i][j] = product(list2[i], list2[j], rep, rep, gens)
     idx = np.argwhere(np.all(a[..., :] == 0, axis=0))
     a2 = np.delete(a, idx, axis=1)
     a3 =a2[~np.all(a2 == 0, axis=1)]
